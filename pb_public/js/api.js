@@ -1,6 +1,6 @@
 // js/api.js
 
-const API_BASE = '';
+const API_BASE = 'const API_BASE = 'https://cloudstore-final-repo.your-username.replit.dev';';
 
 // Auth token helpers
 function getAuthToken() {
