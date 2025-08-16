@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudStore - Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="logo">CloudStore</h1>
+                <nav class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item active" data-folder="">Home</span>
+                </nav>
+            </div>
+            
+            <div class="header-right">
+                <button id="darkModeToggle" class="btn btn-icon" title="Toggle dark mode">
+                    🌙
+                </button>
+                <div class="user-menu">
+                    <button id="userMenuBtn" class="btn btn-secondary">
+                        <span id="username">User</span> ▼
+                    </button>
+                    <div id="userDropdown" class="dropdown hidden">
+                        <button id="logoutBtn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button id="uploadBtn" class="btn btn-primary">
+                    📁 Upload Files
+                </button>
+                <button id="createFolderBtn" class="btn btn-secondary">
+                    📂 New Folder
+                </button>
+                
+                <select id="folderSelect" class="btn btn-secondary" title="Select a folder">
+                    <!-- Folders will be loaded here by JavaScript -->
+                </select>
+        
+                <button id="backBtn" class="btn btn-secondary hidden">
+                    ← Back
+                </button>
+            </div>
+            
+            <div class="toolbar-right">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search files...">
+                    <button id="searchBtn">🔍</button>
+                </div>
+                
+                <div class="sort-dropdown">
+                    <select id="sortSelect">
+                        <option value="name">Sort by Name</option>
+                        <option value="date">Sort by Date</option>
+                        <option value="size">Sort by Size</option>
+                    </select>
+                </div>
+                
+                <div class="view-toggle">
+                    <button id="gridViewBtn" class="btn btn-icon active" title="Grid view">⊞</button>
+                    <button id="listViewBtn" class="btn btn-icon" title="List view">☰</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upload Area -->
+        <div id="uploadArea" class="upload-area hidden">
+            <div class="upload-content">
+                <div class="upload-icon">📁</div>
+                <p>Drag and drop files here or click to select</p>
+                <input type="file" id="fileInput" multiple hidden>
+                <button id="selectFilesBtn" class="btn btn-primary">Select Files</button>
+            </div>
+            <button id="closeUploadBtn" class="upload-close">×</button>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div id="progressContainer" class="progress-container hidden">
+            <div class="progress-info">
+                <span id="progressText">Uploading...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+        
+        <!-- File Grid/List -->
+        <div id="fileContainer" class="file-container grid-view">
+            <div id="fileGrid" class="file-grid">
+                <!-- Files will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state hidden">
+            <div class="empty-icon">📂</div>
+            <h3>No files yet</h3>
+            <p>Upload your first file to get started</p>
+            <button class="btn btn-primary" onclick="document.getElementById('uploadBtn').click()">
+                Upload Files
+            </button>
+        </div>
+    </main>
+    
+    <!-- Modals -->
+    
+    <!-- Rename Modal -->
+    <div id="renameModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rename</h3>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="renameInput" placeholder="Enter new name">
+            </div>
+            <div class="modal-footer">
+                <button id="cancelRename" class="btn btn-secondary">Cancel</button>
+                <button id="confirmRename" class="btn btn-primary">Rename</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share File</h3>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Share Link:</label>
+                    <div class="input-group">
+                        <input type="text" id="shareLink" readonly>
+                        <button id="copyLinkBtn" class="btn btn-secondary">Copy</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shareExpiry">Expires in:</label>
+                    <select id="shareExpiry">
+                        <option value="">Never</option>
+                        <option value="1">1 hour</option>
+                        <option value="24">1 day</option>
+                        <option value="168">1 week</option>
+                        <option value="720">1 month</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sharePassword">Password (optional):</label>
+                    <input type="password" id="sharePassword" placeholder="Enter password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelShare" class="btn btn-secondary">Cancel</button>
+                <button id="generateShare" class="btn btn-primary">Generate Link</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Delete</h3>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<span id="deleteItemName"></span>"?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+                <button id="confirmDelete" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu hidden">
+        <button data-action="download">📥 Download</button>
+        <button data-action="rename">✏️ Rename</button>
+        <button data-action="share">🔗 Share</button>
+        <button data-action="delete">🗑️ Delete</button>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+        <span id="notificationText"></span>
+        <button id="notificationClose">×</button>
+    </div>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
