@@ -1,7 +1,6 @@
 // js/api.js
 
-const API_BASE = 'const API_BASE = 'https://cloudstore-final-repo.your-username.replit.dev';
-
+const API_BASE = 'https://cloudstore-final-repo.divyanshgamer62.replit.dev';
 // Auth token helpers
 function getAuthToken() {
     return localStorage.getItem('authToken');
